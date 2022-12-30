@@ -18,3 +18,12 @@ Instead of a block of characters defining a note, greater-than (>) and less-than
 
 Comments are ignored. They begin with a number sign (#) and end with the next line break.
   Example: "a8~~ # This note is played, but the rest of this line is ignored!"
+
+The program is run with the following command arguments:
+arg0: "python"
+arg1: script name ("text_file_synth.py")
+arg2: input TXT file name with extension ("your_input_file.txt")
+arg3: output WAV file name with extension ("your_output_file.wav")
+
+Try the following cmd from the working directory:
+python text_file_synth.py "route1.txt" "route1.wav"
