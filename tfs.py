@@ -1,6 +1,6 @@
-# text_file_synth.py
+# tfs.py
 
-# Create an audio file from commands in a .TXT file.
+# Text File Synth. Create an audio file from commands in a .TXT file.
 
 import sys
 from tfs_env import TFSEnvironment
@@ -10,7 +10,7 @@ import pywav
 
 def __console_program():
     # Parse console command options.
-    # argv[0] = "text_file_synth.py", argv[1] = input text file path, argv[2] = output WAV file path
+    # argv[0] = "tfs.py", argv[1] = input text file path, argv[2] = output WAV file path
     argc = len(sys.argv)
 
     if argc < 2:
@@ -40,7 +40,7 @@ def __console_program():
 
     # Set up synth environment.
     SAMPLE_RATE = 44100
-    BIT_DEPTH = 8
+    FORMAT = pywav.SampleFormat.int_fmt(8)
 
     env = TFSEnvironment(SAMPLE_RATE)
     env.set_bpm(160)
@@ -59,12 +59,15 @@ def __console_program():
     if output_path != "":
         try:
             with open(output_path, "wb") as f:
-                f.write(pywav.create_from_samples_mono(SAMPLE_RATE, BIT_DEPTH, parser.samples))
+                f.write(pywav.create_from_samples_mono(SAMPLE_RATE, FORMAT, parser.samples))
                 f.flush()
                 print(f"Output was placed at \"{output_path}\"")
-        except OSError:
-            print(f"Unable to write to output file at: \"{output_path}\"")
+        except OSError as e:
+            print(f"Unable to write to output file at \"{output_path}\": {e}")
             exit(53)
+        except Exception as e:
+            print(f"Unexpected exception: {e}")
+            exit(54)
     else:
         print("No output file specified.")
 

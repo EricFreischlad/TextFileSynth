@@ -86,8 +86,10 @@ class Parser:
         self.__current += 1
         return self.__tokens[self.__current - 1]
 
-    def __peek(self) -> Token:
-        return self.__tokens[self.__current]
+    def __try_peek(self):
+        if self.__current < len(self.__tokens) - 1:
+            return True, self.__tokens[self.__current]
+        return False, None
 
     def __note(self, token:Token) -> bool:
         note_num = 69
@@ -100,7 +102,8 @@ class Parser:
             note_num = (self.__octave * 12) + Parser.__NOTE_NUM_OFFSETS[note_letter]
         
         # Parse sharp or flat, if given.
-        if self.__peek().token_type == TokenType.PLUS_MINUS:
+        found, token = self.__try_peek()
+        if found and token.token_type == TokenType.PLUS_MINUS:
             sharp_flat = self.__advance()
             if sharp_flat.value:    # Bool
                 note_num += 1
@@ -108,7 +111,8 @@ class Parser:
                 note_num -= 1
 
         # Parse measure divisor.
-        if self.__peek().token_type == TokenType.NUMBER:
+        found, token = self.__try_peek()
+        if found and token.token_type == TokenType.NUMBER:
             number = self.__advance()
             if number.value != 0:
                 divisor = number.value
@@ -118,13 +122,15 @@ class Parser:
                 return False
         else:
             # Measure divisor required.
-            self.error_msg = f"Unexpected token at index {self.__current}: {self.__peek().token_type.name} (Expected: Measure divisor number)"
+            self.error_msg = f"Unexpected token at index {self.__current}: {token.token_type.name if token else 'NONE'} (Expected: Measure divisor number)"
             return False
         
         # Parse extended duration.
-        if not self.__is_at_end() and self.__peek().token_type == TokenType.TILDES:
-            tildes = self.__advance()
-            duration += tildes.value
+        if not self.__is_at_end():
+            found, token = self.__try_peek()
+            if found and token.token_type == TokenType.TILDES:
+                tildes = self.__advance()
+                duration += tildes.value
 
         # Generate the samples.
         self.samples.extend(self.__env.note(note_num, divisor, duration))
@@ -136,7 +142,8 @@ class Parser:
         duration = 1
 
         # Parse measure divisor.
-        if self.__peek().token_type == TokenType.NUMBER:
+        found, token = self.__try_peek()
+        if found and token.token_type == TokenType.NUMBER:
             number = self.__advance()
             if number.value != 0:
                 divisor = number.value
@@ -146,13 +153,15 @@ class Parser:
                 return False
         else:
             # Measure divisor required.
-            self.error_msg = f"Unexpected token at index {self.__current}: {self.__peek().token_type.name} (Expected: Measure divisor number)"
+            self.error_msg = f"Unexpected token at index {self.__current}: {token.token_type.name if token else 'NONE'} (Expected: Measure divisor number)"
             return False
         
         # Parse extended duration.
-        if not self.__is_at_end() and self.__peek().token_type == TokenType.TILDES:
-            tildes = self.__advance()
-            duration += tildes.value
+        if not self.__is_at_end():
+            found, token = self.__try_peek()
+            if found and token.token_type == TokenType.TILDES:
+                tildes = self.__advance()
+                duration += tildes.value
 
         # Generate the samples.
         self.samples.extend(self.__env.rest(divisor, duration))
