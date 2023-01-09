@@ -21,9 +21,9 @@ Comments are ignored. They begin with a number sign (#) and end with the next li
 
 The program is run with the following command arguments:
 - arg0: "python"
-- arg1: script name ("text_file_synth.py")
+- arg1: script name ("tfs.py")
 - arg2: input TXT file name with extension ("your_input_file.txt")
 - arg3: output WAV file name with extension ("your_output_file.wav")
 
 Try the following cmd from the working directory:
-python text_file_synth.py "route1.txt" "route1.wav"
+python tfs.py route1.txt route1.wav
