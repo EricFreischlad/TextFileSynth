@@ -87,7 +87,7 @@ class Parser:
         return self.__tokens[self.__current - 1]
 
     def __try_peek(self):
-        if self.__current < len(self.__tokens) - 1:
+        if self.__current < len(self.__tokens):
             return True, self.__tokens[self.__current]
         return False, None
 
@@ -122,7 +122,7 @@ class Parser:
                 return False
         else:
             # Measure divisor required.
-            self.error_msg = f"Unexpected token at index {self.__current}: {token.token_type.name if token else 'NONE'} (Expected: Measure divisor number)"
+            self.error_msg = f"Unexpected token after note letter at index {self.__current}: {token.token_type.name if token else 'NONE'} (Expected: Measure divisor number)"
             return False
         
         # Parse extended duration.
@@ -153,7 +153,7 @@ class Parser:
                 return False
         else:
             # Measure divisor required.
-            self.error_msg = f"Unexpected token at index {self.__current}: {token.token_type.name if token else 'NONE'} (Expected: Measure divisor number)"
+            self.error_msg = f"Unexpected token after rest at index {self.__current}: {token.token_type.name if token else 'NONE'} (Expected: Measure divisor number)"
             return False
         
         # Parse extended duration.
