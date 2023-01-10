@@ -55,6 +55,10 @@ def __console_program():
     # Successful scan and parse.
     print("File scanned and parsed successfully.")
 
+    # Debug Scanned Tokens
+    # for t in scanner.tokens:
+        # print(t)
+
     # If output path is specified and valid, output to it.
     if output_path != "":
         try:

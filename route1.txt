@@ -1,3 +1,4 @@
 # "Route 1" from Pokemon Red Version
 
+@240
 d8 e8 f+8 _8 f+8 _8 f+4 d8 e8 f+8 _8 f+8 _8 f+4 d8 e8 f+8 _8 f+8 _8 g8~~ f+8 e2

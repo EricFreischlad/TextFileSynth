@@ -20,12 +20,21 @@ class TokenType(Enum):
     TILDES = 3      # value is count
     PLUS_MINUS = 4  # value is True if plus, False if minus
     GT_LT = 5       # value is True if GT, False if LT
+    AT = 6          # value is empty
 
 class Token:
-    script_index:int
-    raw_script:str
-    token_type:TokenType
-    value:object
+
+    def __init__(self):
+        self.script_index:int
+        self.raw_script:str
+        self.token_type:TokenType
+        self.value:object
+
+    def __str__(self) -> str:
+        return f"token(\"{self.token_type.name}\", {str(self.value)})@{self.script_index}"
+
+    def __repr__(self) -> str:
+        return self.__str__()
 
 class Parser:
     __NOTE_NUM_OFFSETS = {
@@ -73,8 +82,11 @@ class Parser:
                 return False
         elif t.token_type == TokenType.GT_LT:
             self.__octave_change(t)
+        elif t.token_type == TokenType.AT:
+            if not self.__bpm_change(t):
+                return False
         else:
-            self.error_msg = f"Unexpected token at index {self.__current}: {t.token_type.name} (Expected: Note, rest, or octave change)"
+            self.error_msg = f"Unexpected token at index {self.__current}: {t.token_type.name} (Expected: Note, rest, octave change, or BPM change)"
             return False
         
         return True
@@ -118,7 +130,7 @@ class Parser:
                 divisor = number.value
             else:
                 # Measure divisor must not be 0.
-                self.error_msg = f"Measure divisor may not be 0."
+                self.error_msg = f"Measure divisor at index {self.__current} may not be 0."
                 return False
         else:
             # Measure divisor required.
@@ -148,8 +160,7 @@ class Parser:
             if number.value != 0:
                 divisor = number.value
             else:
-                # Measure divisor must not be 0.
-                self.error_msg = f"Measure divisor may not be 0."
+                self.error_msg = f"Measure divisor at index {self.__current} may not be 0."
                 return False
         else:
             # Measure divisor required.
@@ -175,6 +186,23 @@ class Parser:
         elif not token.value:
             # Lower the octave by one, respecting the min octave.
             self.__octave = max(self.MIN_OCTAVE, self.__octave - 1)
+
+    def __bpm_change(self, token:Token):
+        # Parse new BPM number.
+        found, token = self.__try_peek()
+        if found and token.token_type == TokenType.NUMBER:
+            number = self.__advance()
+            if number.value > 0:
+                self.__env.set_bpm(number.value)
+            else:
+                self.error_msg = f"New BPM number at index {self.__current} must be greater than 0."
+                return False
+        else:
+            # Measure divisor required.
+            self.error_msg = f"Unexpected token after @ symbol at index {self.__current}: {token.token_type.name if token else 'NONE'} (Expected: New BPM number)"
+            return False
+        
+        return True
 
 class Scanner:
     def __init__(self, text:str):
@@ -214,6 +242,8 @@ class Scanner:
             self.__add_token(TokenType.GT_LT, True)
         elif c == '<':
             self.__add_token(TokenType.GT_LT, False)
+        elif c == '@':
+            self.__add_token(TokenType.AT, None)
         elif c.isnumeric():
             self.__number()
         elif c in "abcdefg":

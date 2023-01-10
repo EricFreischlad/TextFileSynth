@@ -17,10 +17,12 @@ class TFSEnvironment:
         self.__synth = signal_generator.PulseGenerator(sample_rate, 440, 0.125)
 
     def set_bpm(self, bpm:float):
-        self.__bpm = bpm
+        if bpm > 0:
+            self.__bpm = bpm
 
     def set_gain(self, gain:float):
-        self.__gain = gain
+        if gain in range(0, 1):
+            self.__gain = gain
 
     def __get_freq(note_num:int):
         # MIDI tuning standard from Wikipedia, baby!
