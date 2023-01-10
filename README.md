@@ -16,6 +16,9 @@ Blocks of characters used to define individual notes should be separated by spac
 Instead of a block of characters defining a note, greater-than (>) and less-than (<) symbols can be used to change the current octave up and down, respectively. These do not need to be used for each note. Rather, each one changes the octave for all notes after it until the next change. The default octave at the beginning of parsing is 5.
   Example: "a8 > a8 > a8 << a8"
 
+A song's tempo (BPM) can be set with an at sign (@) followed by the BPM number. All notes after the BPM change will be affected and multiple BPM changes can exist in a song. Only integer BPM numbers are supported. The default BPM at the beginning of parsing is 120.
+  Example: "@180"
+
 Comments are ignored. They begin with a number sign (#) and end with the next line break.
   Example: "a8~~ # This note is played, but the rest of this line is ignored!"
 
