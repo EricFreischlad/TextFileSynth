@@ -8,7 +8,7 @@ Create an audio file from commands in a .TXT document.
 - REQUIRED: an integer value representing the duration for the note to play, as a divisor of a full 4/4 measure
   - Example: 1 = whole note, 2 = half note, 4 = quarter note, 8 = eighth note. All whole numbers greater than 0 are acceptable.
  - OPTIONAL: any number of tildes (~). each tilde represents an additional duration for the note to play.
-  - Example: For a note with divisor number of 4, adding no tildes will make the note play for a quarter of a measure, adding one tilde will make it play for half a measure, adding 3 tildes will make it play for 3/4 of a measure, etc...
+  - Example: For a note with divisor number of 4, adding no tildes will make the note play for a quarter of a measure, adding one tilde will make it play for half a measure, adding 2 tildes will make it play for 3/4 of a measure, etc...
 
 Blocks of characters used to define individual notes should be separated by spaces, but it is not required.
   Example: "a16 _16 b4~~ c+4"
