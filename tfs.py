@@ -38,6 +38,10 @@ def __console_program():
         print(f"Scanner error: {scanner.error_msg}")
         exit(51)
 
+    # Debug Scanned Tokens
+    # for t in scanner.tokens:
+    #     print(t)
+
     # Set up synth environment.
     SAMPLE_RATE = 44100
     FORMAT = pywav.SampleFormat.int_fmt(8)
@@ -54,10 +58,6 @@ def __console_program():
 
     # Successful scan and parse.
     print("File scanned and parsed successfully.")
-
-    # Debug Scanned Tokens
-    # for t in scanner.tokens:
-        # print(t)
 
     # If output path is specified and valid, output to it.
     if output_path != "":
